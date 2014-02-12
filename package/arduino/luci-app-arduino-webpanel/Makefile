@@ -21,7 +21,7 @@ define Package/luci-app-arduino-webpanel
   CATEGORY:=LuCI
   SUBMENU:=3. Applications
   TITLE:= simplified wifi configuration panel
-  DEPENDS:=+luci +luci-mod-admin-full +luci-lib-json +uhttpd-mod-lua
+  DEPENDS:=+luci +luci-mod-admin-core +luci-lib-json +uhttpd-mod-lua
 endef
 
 define Package/luci-app-arduino-webpanel/description
@@ -36,10 +36,14 @@ define Package/luci-app-arduino-webpanel/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller/arduino
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/view/arduino
 	$(INSTALL_DIR) $(1)/www/luci-static/resources/arduino
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+
+	$(CP) ./files/* $(1)
 
 	find $(PKG_BUILD_DIR)/usr/ -name '*.lua' -exec luac -s -o {} {} \;
 	$(CP) $(PKG_BUILD_DIR)/usr/* $(1)/usr/
 	$(CP) $(PKG_BUILD_DIR)/www/* $(1)/www/
+	mv $(1)/www/index.html $(1)/www/arduino.index.html
 endef
 
 $(eval $(call BuildPackage,luci-app-arduino-webpanel))
